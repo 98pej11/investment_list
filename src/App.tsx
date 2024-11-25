@@ -1,26 +1,44 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import { lazy } from "react";
+import { Routes, Route } from "react-router-dom";
+import { ThemeProvider } from "styled-components";
+import { lightTheme, darkTheme } from "theme";
+import * as S from "App.styles";
+import InvestmentProducts from "pages/InvestmentProducts/InvestmentProducts";
 
-function App() {
+const ProductList = lazy(() => import("./components/ProductList/ProductList"));
+
+export default function App() {
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+
+  // 사용자 테마 설정을 localStorage에서 가져오기
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      setIsDarkMode(true);
+    }
+  }, []);
+
+  // 테마 변경 함수
+  const toggleTheme = () => {
+    setIsDarkMode((prev) => {
+      const newTheme = !prev;
+      localStorage.setItem("theme", newTheme ? "dark" : "light"); // localStorage에 테마 저장
+      return newTheme;
+    });
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+      <S.Header>
+        <div>다크모드 설정</div>
+        <S.Wrapper onClick={toggleTheme}>
+          <S.Toggle /> {/* Toggle에만 isDarkMode 전달 */}
+        </S.Wrapper>
+      </S.Header>
+      <Routes>
+        <Route path="/" element={<InvestmentProducts />} />
+      </Routes>
+    </ThemeProvider>
   );
 }
-
-export default App;
