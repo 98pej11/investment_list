@@ -4,12 +4,13 @@ import { productStore } from "stores/product.stores"; // MobX store 경로
 import * as S from "components/SearchFilter/SearchFilter.styles";
 
 export default observer(function SearchFilter() {
-  const { amountFilter, lengthFilter, earningRateFilter, titleFilter } =
-    productStore;
-
-  const handleSearch = () => {
-    productStore.search(); // 검색 실행
-  };
+  const {
+    amountFilter,
+    lengthFilter,
+    earningRateFilter,
+    titleFilter,
+    sortOption,
+  } = productStore;
 
   return (
     <S.Container>
@@ -37,7 +38,18 @@ export default observer(function SearchFilter() {
         value={titleFilter}
         onChange={(e) => productStore.setTitleFilter(e.target.value)}
       />
-      <S.Button onClick={handleSearch}>검색</S.Button>
+      <S.Select
+        value={sortOption}
+        onChange={(e) => productStore.setSortOption(e.target.value)}
+      >
+        <option value="">정렬 기준 선택</option>
+        <option value="amountDesc">금액 높은 순</option>
+        <option value="amountAsc">금액 낮은 순</option>
+        <option value="lengthDesc">기간 높은 순</option>
+        <option value="lengthAsc">기간 낮은 순</option>
+        <option value="earningRateDesc">수익률 높은 순</option>
+        <option value="earningRateAsc">수익률 낮은 순</option>
+      </S.Select>
     </S.Container>
   );
 });

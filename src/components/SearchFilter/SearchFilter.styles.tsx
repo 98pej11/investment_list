@@ -40,3 +40,19 @@ export const Button = styled.button`
     width: 100%;
   }
 `;
+
+export const Select = styled.select`
+  width: 100%;
+  height: 40px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+`;

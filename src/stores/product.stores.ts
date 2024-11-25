@@ -8,6 +8,7 @@ class ProductStore {
   lengthFilter: number | "" = ""; // 최대 기간 필터
   earningRateFilter: number | "" = ""; // 최소 수익률 필터
   titleFilter: string = ""; // 상품명 필터
+  sortOption: string = ""; // 정렬 옵션
 
   constructor() {
     makeAutoObservable(this); // MobX가 this를 바인딩하도록 보장
@@ -30,9 +31,11 @@ class ProductStore {
     this.titleFilter = value;
   }
 
-  // 필터링된 상품 리스트 계산
+  setSortOption(option: string) {
+    this.sortOption = option; // 정렬 옵션 업데이트
+  }
   get filteredProducts() {
-    return this.products.filter((product) => {
+    const filtered = this.products.filter((product) => {
       const matchesAmount =
         this.amountFilter === "" || product.amount <= this.amountFilter;
       const matchesLength =
@@ -48,6 +51,30 @@ class ProductStore {
         matchesAmount && matchesLength && matchesEarningRate && matchesTitle
       );
     });
+
+    // 정렬 적용
+    return this.sortProducts(filtered);
+  }
+
+  sortProducts(products: Product[]) {
+    const sorted = [...products];
+
+    switch (this.sortOption) {
+      case "amountDesc":
+        return sorted.sort((a, b) => b.amount - a.amount);
+      case "amountAsc":
+        return sorted.sort((a, b) => a.amount - b.amount);
+      case "lengthDesc":
+        return sorted.sort((a, b) => b.length - a.length);
+      case "lengthAsc":
+        return sorted.sort((a, b) => a.length - b.length);
+      case "earningRateDesc":
+        return sorted.sort((a, b) => b.earningRate - a.earningRate);
+      case "earningRateAsc":
+        return sorted.sort((a, b) => a.earningRate - b.earningRate);
+      default:
+        return sorted; // 정렬 옵션이 없을 경우 필터링된 상품만 반환
+    }
   }
 
   search() {
