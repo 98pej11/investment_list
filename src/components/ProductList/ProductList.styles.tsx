@@ -1,0 +1,91 @@
+import styled from "styled-components";
+
+export const Container = styled.div`
+  background-color: ${({ theme }) => theme.background};
+  color: ${({ theme }) => theme.text};
+
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 기본적으로 한 줄에 4개 */
+  gap: 20px; /* 간격 */
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr); /* 화면이 좁아지면 한 줄에 3개 */
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr); /* 태블릿 이하에서는 한 줄에 2개 */
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(1, 1fr); /* 모바일에서는 한 줄에 1개 */
+  }
+`;
+
+export const Card = styled.div`
+  display: grid;
+  grid-template-areas: "image" "title" "info";
+  grid-template-rows: repeat(3, fit-content(100%));
+  row-gap: 10px;
+
+  background-color: ${({ theme }) => theme.background};
+  color: ${({ theme }) => theme.text};
+
+  border: 1px solid #ddd; /* 테두리 */
+  border-radius: 8px; /* 모서리 둥글게 */
+  padding: 10px 10px 15px 10px; /* 내부 여백 */
+  text-align: center; /* 텍스트 중앙 정렬 */
+
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+  transition: transform 0.3s ease;
+
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-5px); /* 호버 시 약간 위로 */
+  }
+
+  img {
+    grid-area: image;
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+`;
+
+export const Title = styled.div`
+  grid-area: title;
+  font-size: 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+export const Info = styled.div`
+  grid-area: info;
+  color: #979696;
+  font-weight: bold;
+  font-size: 15px;
+
+  span {
+    font-size: 18px;
+    font-weight: bold;
+    margin-right: 10px;
+    color: ${({ theme }) => theme.text};
+
+    &.highlight {
+      color: #e74c3c; /* 수익률 강조 색상 */
+    }
+  }
+`;
+
+export const Loading = styled.div`
+  text-align: center;
+  font-size: 18px;
+  color: ${({ theme }) => theme.text};
+`;
+
+export const Error = styled.div`
+  text-align: center;
+  font-size: 18px;
+  color: red;
+`;
