@@ -27,6 +27,13 @@ export const Input = styled.input`
   &::placeholder {
     font-family: "GmarketSans";
   }
+
+  /* 증감 버튼 크기 키우기 */
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    height: 30px; /* 크기 변경 */
+    width: 30px; /* 크기 변경 */
+  }
 `;
 
 export const SelectContainer = styled.div`

@@ -1,76 +1,205 @@
-/**
- * @jest-environment jsdom
- */
-
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { Provider } from "mobx-react";
 import { productStore } from "stores/productStore";
 import ProductList from "components/ProductList/ProductList";
 import "@testing-library/jest-dom";
 
-jest.mock("stores/product.stores", () => ({
+jest.mock("stores/productStore", () => ({
   productStore: {
-    filteredProducts: Array.from({ length: 50 }, (_, index) => ({
-      index,
-      thumbnail: `https://example.com/image${index}.jpg`,
-      title: `Product ${index}`,
-      earningRate: index % 10,
-      amount: (index + 1) * 10000,
-      length: (index % 12) + 1,
-    })),
+    filteredProducts: [
+      {
+        index: 1,
+        thumbnail: "thumb1.jpg",
+        title: "Product 1",
+        earningRate: 8,
+        amount: 100000,
+        length: 12,
+      },
+      {
+        index: 2,
+        thumbnail: "thumb2.jpg",
+        title: "Product 2",
+        earningRate: 9,
+        amount: 200000,
+        length: 24,
+      },
+      {
+        index: 3,
+        thumbnail: "thumb3.jpg",
+        title: "Product 3",
+        earningRate: 7,
+        amount: 300000,
+        length: 36,
+      },
+      {
+        index: 4,
+        thumbnail: "thumb4.jpg",
+        title: "Product 4",
+        earningRate: 6,
+        amount: 400000,
+        length: 48,
+      },
+      {
+        index: 5,
+        thumbnail: "thumb5.jpg",
+        title: "Product 5",
+        earningRate: 10,
+        amount: 500000,
+        length: 60,
+      },
+      {
+        index: 6,
+        thumbnail: "thumb6.jpg",
+        title: "Product 6",
+        earningRate: 5,
+        amount: 600000,
+        length: 72,
+      },
+      {
+        index: 7,
+        thumbnail: "thumb7.jpg",
+        title: "Product 7",
+        earningRate: 9,
+        amount: 700000,
+        length: 84,
+      },
+      {
+        index: 8,
+        thumbnail: "thumb8.jpg",
+        title: "Product 8",
+        earningRate: 8,
+        amount: 800000,
+        length: 96,
+      },
+      {
+        index: 9,
+        thumbnail: "thumb9.jpg",
+        title: "Product 9",
+        earningRate: 7,
+        amount: 900000,
+        length: 108,
+      },
+      {
+        index: 10,
+        thumbnail: "thumb10.jpg",
+        title: "Product 10",
+        earningRate: 6,
+        amount: 1000000,
+        length: 120,
+      },
+      {
+        index: 11,
+        thumbnail: "thumb11.jpg",
+        title: "Product 11",
+        earningRate: 5,
+        amount: 1100000,
+        length: 132,
+      },
+      {
+        index: 12,
+        thumbnail: "thumb12.jpg",
+        title: "Product 12",
+        earningRate: 4,
+        amount: 1200000,
+        length: 144,
+      },
+      {
+        index: 13,
+        thumbnail: "thumb13.jpg",
+        title: "Product 13",
+        earningRate: 3,
+        amount: 1300000,
+        length: 156,
+      },
+      {
+        index: 14,
+        thumbnail: "thumb14.jpg",
+        title: "Product 14",
+        earningRate: 2,
+        amount: 1400000,
+        length: 168,
+      },
+      {
+        index: 15,
+        thumbnail: "thumb15.jpg",
+        title: "Product 15",
+        earningRate: 1,
+        amount: 1500000,
+        length: 180,
+      },
+    ],
     fetchProducts: jest.fn(),
   },
 }));
 
-describe("ProductList Component", () => {
+describe("ProductList 컴포넌트", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    delete window.location;
+    window.location = { href: "" };
   });
 
-  it("renders initial products up to visibleCount", () => {
-    render(<ProductList />);
-    // 초기 12개의 상품만 렌더링되는지 확인
-    const products = screen.getAllByRole("img");
-    expect(products.length).toBe(12);
-    expect(screen.getByAltText("Product 0")).toBeInTheDocument();
-    expect(screen.getByAltText("Product 11")).toBeInTheDocument();
+  it("상품 카드 클릭 시 handleProductClick 함수가 호출되는지 확인", () => {
+    render(
+      <Provider productStore={productStore}>
+        <ProductList />
+      </Provider>
+    );
+
+    const productCard = screen.getByText("Product 1").closest("div");
+
+    if (productCard) {
+      fireEvent.click(productCard);
+    }
+
+    expect(window.location.href).toBe("https://8percent.kr/deals/1");
   });
 
-  it("loads additional products on scroll", async () => {
-    render(<ProductList />);
+  it("스크롤 이벤트로 12개씩 상품이 추가로 로드되는지 확인", () => {
+    render(
+      <Provider productStore={productStore}>
+        <ProductList />
+      </Provider>
+    );
 
-    // 스크롤 이벤트를 트리거하여 추가 로드
+    // 첫 번째 렌더링에서 12개의 상품이 렌더링되는지 확인
+    expect(screen.getAllByTestId("product-card")).toHaveLength(12);
+
+    // 스크롤 이벤트 트리거
     fireEvent.scroll(window, { target: { scrollY: 1000 } });
 
-    await waitFor(() => {
-      const products = screen.getAllByRole("img");
-      expect(products.length).toBeGreaterThan(12);
-      expect(products.length).toBe(24); // 추가 12개 로드
-    });
+    // 스크롤 후 12개씩 상품이 추가로 로드되었는지 확인
+    expect(screen.getAllByTestId("product-card")).toHaveLength(15); // 현재 데이터가 3개라 더 로드되지 않음.
   });
 
-  it("redirects to product detail page on product click", () => {
-    delete window.location;
-    window.location = { href: "" }; // 타입 단언 제거
-
-    render(<ProductList />);
-    const firstProduct = screen.getByAltText("Product 0");
-    fireEvent.click(firstProduct);
-
-    expect(window.location.href).toBe("https://8percent.kr/deals/0");
-  });
-
-  it("fetches products on mount", () => {
-    render(<ProductList />);
+  it("fetchProducts가 컴포넌트 마운트 시 호출되는지 확인", () => {
+    render(
+      <Provider productStore={productStore}>
+        <ProductList />
+      </Provider>
+    );
 
     expect(productStore.fetchProducts).toHaveBeenCalledTimes(1);
   });
 
-  it("highlights earning rate >= 9", () => {
-    render(<ProductList />);
-    const highlightedRates = screen.getAllByText(/9%|10%/);
+  it("상품의 earningRate가 9 이상일 경우 'highlight' 클래스가 적용되는지 확인", () => {
+    render(
+      <Provider productStore={productStore}>
+        <ProductList />
+      </Provider>
+    );
 
-    highlightedRates.forEach((rate) => {
-      expect(rate).toHaveClass("highlight");
+    const earningRates = screen.getAllByTestId("earning-rate");
+    earningRates.forEach((earningRate) => {
+      const earningRateValue = parseFloat(
+        earningRate.textContent.replace("%", "")
+      );
+
+      if (earningRateValue >= 9) {
+        expect(earningRate).toHaveClass("highlight");
+      } else {
+        expect(earningRate).not.toHaveClass("highlight");
+      }
     });
   });
 });

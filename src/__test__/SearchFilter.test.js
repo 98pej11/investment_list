@@ -1,15 +1,10 @@
-/**
- * @jest-environment jsdom
- */
-
-import { render, screen, fireEvent } from "@testing-library/react";
-import { act } from "react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { Provider } from "mobx-react";
 import { productStore } from "stores/productStore";
 import SearchFilter from "components/SearchFilter/SearchFilter";
 import "@testing-library/jest-dom";
 
-jest.mock("stores/product.stores", () => ({
+jest.mock("stores/productStore", () => ({
   productStore: {
     amountFilter: "",
     lengthFilter: "",
@@ -21,15 +16,17 @@ jest.mock("stores/product.stores", () => ({
     setEarningRateFilter: jest.fn(),
     setTitleFilter: jest.fn(),
     setSortOption: jest.fn(),
+    resetFilters: jest.fn(),
+    sortOptionLabel: "정렬 기준 선택",
   },
 }));
 
-describe("SearchFilter Component", () => {
+describe("SearchFilter 컴포넌트", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it("renders all input fields and dropdown", () => {
+  it("모든 입력 필드와 드롭다운이 렌더링되는지 확인", () => {
     render(
       <Provider productStore={productStore}>
         <SearchFilter />
@@ -43,7 +40,7 @@ describe("SearchFilter Component", () => {
     expect(screen.getByText("정렬 기준 선택")).toBeInTheDocument();
   });
 
-  it("updates amount filter when input changes", () => {
+  it("최대 금액 입력값 변경 시 필터가 업데이트되는지 확인", () => {
     render(
       <Provider productStore={productStore}>
         <SearchFilter />
@@ -51,14 +48,12 @@ describe("SearchFilter Component", () => {
     );
 
     const amountInput = screen.getByPlaceholderText("최대 금액");
-    act(() => {
-      fireEvent.change(amountInput, { target: { value: "100000" } });
-    });
+    fireEvent.change(amountInput, { target: { value: "100000" } });
 
     expect(productStore.setAmountFilter).toHaveBeenCalledWith("100000");
   });
 
-  it("updates length filter when input changes", () => {
+  it("최대 기간 입력값 변경 시 필터가 업데이트되는지 확인", () => {
     render(
       <Provider productStore={productStore}>
         <SearchFilter />
@@ -66,14 +61,12 @@ describe("SearchFilter Component", () => {
     );
 
     const lengthInput = screen.getByPlaceholderText("최대 기간");
-    act(() => {
-      fireEvent.change(lengthInput, { target: { value: "12" } });
-    });
+    fireEvent.change(lengthInput, { target: { value: "12" } });
 
     expect(productStore.setLengthFilter).toHaveBeenCalledWith("12");
   });
 
-  it("updates earning rate filter when input changes", () => {
+  it("최소 수익률 입력값 변경 시 필터가 업데이트되는지 확인", () => {
     render(
       <Provider productStore={productStore}>
         <SearchFilter />
@@ -81,14 +74,12 @@ describe("SearchFilter Component", () => {
     );
 
     const earningRateInput = screen.getByPlaceholderText("최소 수익률");
-    act(() => {
-      fireEvent.change(earningRateInput, { target: { value: "5" } });
-    });
+    fireEvent.change(earningRateInput, { target: { value: "5" } });
 
     expect(productStore.setEarningRateFilter).toHaveBeenCalledWith("5");
   });
 
-  it("updates title filter when input changes", () => {
+  it("상품명 검색 입력값 변경 시 필터가 업데이트되는지 확인", () => {
     render(
       <Provider productStore={productStore}>
         <SearchFilter />
@@ -96,25 +87,33 @@ describe("SearchFilter Component", () => {
     );
 
     const titleInput = screen.getByPlaceholderText("상품명 검색");
-    act(() => {
-      fireEvent.change(titleInput, { target: { value: "Product A" } });
-    });
+    fireEvent.change(titleInput, { target: { value: "Product A" } });
 
     expect(productStore.setTitleFilter).toHaveBeenCalledWith("Product A");
   });
 
-  it("updates sort option when a new option is selected", () => {
+  it("정렬 기준 드롭다운에서 새 옵션 선택 시 필터가 업데이트되는지 확인", async () => {
     render(
       <Provider productStore={productStore}>
         <SearchFilter />
       </Provider>
     );
 
-    const sortSelect = screen.getByRole("combobox");
-    act(() => {
-      fireEvent.change(sortSelect, { target: { value: "amountDesc" } });
-    });
+    // 드롭다운 버튼 클릭으로 드롭다운 열기
+    const button = screen.getByText("정렬 기준 선택");
+    fireEvent.click(button);
 
+    // 드롭다운이 열렸는지 확인 (옵션들이 보이는지)
+    screen.getByText("금액 높은 순");
+    screen.getByText("금액 낮은 순");
+    screen.getByText("기간 높은 순");
+    screen.getByText("기간 낮은 순");
+    screen.getByText("수익률 높은 순");
+    screen.getByText("수익률 낮은 순");
+
+    // "금액 높은 순" 옵션 클릭 후 상태 확인
+    const option = await screen.getByText("금액 높은 순");
+    fireEvent.click(option);
     expect(productStore.setSortOption).toHaveBeenCalledWith("amountDesc");
   });
 });

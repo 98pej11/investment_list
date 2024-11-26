@@ -41,11 +41,15 @@ export default observer(function ProductList() {
         <S.Card
           key={product.index}
           onClick={() => handleProductClick(product.index)}
+          data-testid="product-card"
         >
           <img src={product.thumbnail} alt={product.title} />
           <S.Title>{product.title}</S.Title>
           <S.Info>
-            <span className={product.earningRate >= 9 ? "highlight" : ""}>
+            <span
+              data-testid="earning-rate"
+              className={product.earningRate >= 9 ? "highlight" : ""}
+            >
               {product.earningRate}%
             </span>
             {product.amount / 10000}만원 • {product.length}개월
