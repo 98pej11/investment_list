@@ -1,7 +1,8 @@
 import { observer } from "mobx-react";
-import { productStore } from "stores/product.stores"; // MobX store 경로
-
 import * as S from "components/SearchFilter/SearchFilter.styles";
+import { productStore } from "stores/productStore";
+import { useEffect, useState } from "react";
+import { sortOptions } from "types/sortOptions";
 
 export default observer(function SearchFilter() {
   const {
@@ -11,6 +12,18 @@ export default observer(function SearchFilter() {
     titleFilter,
     sortOption,
   } = productStore;
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // 드롭다운 열기/닫기 상태 관리
+  const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
+
+  /** 필터 초기화 */
+  const handleResetFilters = () => {
+    productStore.resetFilters();
+  };
+
+  useEffect(() => {
+    productStore.resetFilters();
+  }, []);
 
   return (
     <S.Container>
@@ -38,18 +51,33 @@ export default observer(function SearchFilter() {
         value={titleFilter}
         onChange={(e) => productStore.setTitleFilter(e.target.value)}
       />
-      <S.Select
-        value={sortOption}
-        onChange={(e) => productStore.setSortOption(e.target.value)}
-      >
-        <option value="">정렬 기준 선택</option>
-        <option value="amountDesc">금액 높은 순</option>
-        <option value="amountAsc">금액 낮은 순</option>
-        <option value="lengthDesc">기간 높은 순</option>
-        <option value="lengthAsc">기간 낮은 순</option>
-        <option value="earningRateDesc">수익률 높은 순</option>
-        <option value="earningRateAsc">수익률 낮은 순</option>
-      </S.Select>
+      <S.SelectContainer>
+        <S.SelectButton onClick={toggleDropdown}>
+          {productStore.sortOptionLabel}
+          <S.ArrowIcon isOpen={isDropdownOpen} />
+        </S.SelectButton>
+        {isDropdownOpen && (
+          <S.Options>
+            {Object.keys(sortOptions).map((key) => {
+              const option = sortOptions[key as keyof typeof sortOptions];
+              return (
+                <S.Option
+                  key={key}
+                  onClick={() => {
+                    productStore.setSortOption(key as keyof typeof sortOptions);
+                    setIsDropdownOpen(false);
+                  }}
+                >
+                  {option.label}
+                </S.Option>
+              );
+            })}
+          </S.Options>
+        )}
+      </S.SelectContainer>
+      <S.Button onClick={handleResetFilters}>
+        <S.RefreshIcon />
+      </S.Button>
     </S.Container>
   );
 });

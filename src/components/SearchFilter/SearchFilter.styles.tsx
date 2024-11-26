@@ -1,58 +1,101 @@
 import styled from "styled-components";
 
+import { ReactComponent as ArrowDownSVG } from "static/arrows_down.svg";
+import { ReactComponent as RefreshSVG } from "static/refresh.svg";
+
 export const Container = styled.div`
   display: flex;
   padding: 20px 0px 40px;
-  gap: 10px; /* 입력 요소 사이 간격 */
+  gap: 10px;
 
   @media (max-width: 700px) {
-    flex-direction: column; /* 화면 크기가 400px 이하일 때 세로로 정렬 */
+    flex-direction: column;
   }
 `;
 
 export const Input = styled.input`
-  width: 100%; /* 가로 너비를 부모 기준으로 꽉 채움 */
-  height: 40px;
-  padding: 10px; /* 여백 추가 */
-  font-size: 16px; /* 텍스트 크기 */
-  border: 1px solid #ccc; /* 테두리 설정 */
-  border-radius: 4px; /* 모서리 둥글게 */
-  box-sizing: border-box; /* 패딩을 포함한 전체 너비 계산 */
-  outline: none;
-`;
-
-export const Button = styled.button`
-  width: 300px;
-  height: 40px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-
-  &:hover {
-    background-color: #0056b3;
-  }
-
-  @media (max-width: 700px) {
-    width: 100%;
-  }
-`;
-
-export const Select = styled.select`
   width: 100%;
   height: 40px;
   padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
+  font-size: 14px;
+  box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.1);
+  border: none;
+  border-radius: 4px;
+  box-sizing: border-box;
+  outline: none;
+
+  &::placeholder {
+    font-family: "GmarketSans";
+  }
+`;
+
+export const SelectContainer = styled.div`
+  width: 100%;
+  position: relative;
+  cursor: pointer;
+`;
+
+export const SelectButton = styled.div`
+  width: 100%;
+  height: 40px;
+  padding: 10px;
+  font-size: 14px;
+  border: none;
+  box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
   background-color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+  font-family: "GmarketSans";
+  color: #656565;
+  white-space: nowrap;
+  cursor: pointer;
+`;
+
+// 드롭다운 항목 스타일
+export const Options = styled.div`
+  position: absolute;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  margin-top: 5px;
+  z-index: 10;
+`;
+
+// 개별 드롭다운 옵션 스타일
+export const Option = styled.div`
+  padding: 10px;
+  color: #656565;
+  font-family: "GmarketSans";
+  font-size: 14px;
   cursor: pointer;
 
-  &:focus {
-    outline: none;
-    border-color: #007bff;
+  &:hover {
+    background-color: #f1f1f1;
   }
+`;
+
+export const ArrowIcon = styled(ArrowDownSVG)<{ isOpen: boolean }>`
+  width: 16px; /* 아이콘 크기 */
+  height: 16px;
+  fill: #333; /* 아이콘 색상 */
+  transition: transform 0.3s ease; /* 부드러운 회전 애니메이션 */
+  transform: rotate(${(props) => (props.isOpen ? "180deg" : "0deg")});
+`;
+
+export const Button = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  cursor: pointer;
+`;
+
+export const RefreshIcon = styled(RefreshSVG)`
+  cursor: pointer;
 `;

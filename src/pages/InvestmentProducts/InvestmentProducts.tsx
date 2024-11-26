@@ -1,9 +1,7 @@
-import { useEffect, useState } from "react";
-
-import * as S from "pages/InvestmentProducts/InvestmentProducts.styles";
-
 import SearchFilter from "components/SearchFilter/SearchFilter";
 import ProductList from "components/ProductList/ProductList";
+
+import * as S from "pages/InvestmentProducts/InvestmentProducts.styles";
 
 export default function InvestmentProducts() {
   return (

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import { productStore } from "stores/product.stores"; // MobX store 경로
+import { productStore } from "stores/productStore"; // MobX store 경로
 
 import * as S from "components/ProductList/ProductList.styles";
 
@@ -16,6 +16,7 @@ export default observer(function ProductList() {
   useEffect(() => {
     productStore.fetchProducts();
   }, []);
+
   // 스크롤 이벤트 처리: 추가 상품 로딩
   useEffect(() => {
     const handleScroll = () => {
