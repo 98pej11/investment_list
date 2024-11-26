@@ -1,19 +1,17 @@
-import { observer } from "mobx-react";
-import * as S from "components/SearchFilter/SearchFilter.styles";
-import { productStore } from "stores/productStore";
 import { useEffect, useState } from "react";
+import { observer } from "mobx-react";
+
+import * as S from "components/SearchFilter/SearchFilter.styles";
+
 import { sortOptions } from "types/sortOptions";
 
-export default observer(function SearchFilter() {
-  const {
-    amountFilter,
-    lengthFilter,
-    earningRateFilter,
-    titleFilter,
-    sortOption,
-  } = productStore;
+import { productStore } from "stores/productStore";
 
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // 드롭다운 열기/닫기 상태 관리
+export default observer(function SearchFilter() {
+  const { amountFilter, lengthFilter, earningRateFilter, titleFilter } =
+    productStore;
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
 
   /** 필터 초기화 */
@@ -54,7 +52,11 @@ export default observer(function SearchFilter() {
       <S.SelectContainer>
         <S.SelectButton onClick={toggleDropdown}>
           {productStore.sortOptionLabel}
-          <S.ArrowIcon isOpen={isDropdownOpen} />
+          <S.ArrowIcon
+            style={{
+              transform: isDropdownOpen ? "rotate(180deg)" : "rotate(0deg)",
+            }}
+          />
         </S.SelectButton>
         {isDropdownOpen && (
           <S.Options>

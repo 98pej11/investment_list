@@ -1,8 +1,9 @@
 import { makeAutoObservable, runInAction } from "mobx";
 
 import { Product } from "types/productType";
-import { fetchProductList } from "api/productList"; // API 호출 함수
 import { SortOption, sortOptions } from "types/sortOptions";
+
+import { fetchProductList } from "api/productList";
 
 class ProductStore {
   products: Product[] = []; // 전체 상품 데이터
@@ -13,10 +14,10 @@ class ProductStore {
   sortOption: string = ""; // 정렬 옵션
 
   constructor() {
-    makeAutoObservable(this); // MobX가 this를 바인딩하도록 보장
+    makeAutoObservable(this);
   }
 
-  // 필터 초기화 메서드
+  // 필터 초기화
   resetFilters() {
     this.amountFilter = "";
     this.lengthFilter = "";
@@ -26,7 +27,7 @@ class ProductStore {
     this.fetchProducts();
   }
 
-  // 필터 설정 메서드
+  // 필터 설정
   setAmountFilter(value: string) {
     this.amountFilter = value === "" ? "" : parseInt(value, 10);
   }
@@ -44,15 +45,17 @@ class ProductStore {
   }
 
   setSortOption(option: string) {
-    this.sortOption = option; // 정렬 옵션 업데이트
+    this.sortOption = option;
   }
 
+  // 정렬 옵션 라벨명
   get sortOptionLabel() {
     return (
       sortOptions[this.sortOption as SortOption]?.label || "정렬 기준 선택"
     );
   }
 
+  // 필터 목록
   get filteredProducts() {
     const filtered = this.products.filter((product) => {
       const matchesAmount =
@@ -64,17 +67,17 @@ class ProductStore {
         product.earningRate >= this.earningRateFilter;
       const matchesTitle = product.title
         .toLowerCase()
-        .includes(this.titleFilter.toLowerCase());
+        .includes(this.titleFilter.toLowerCase()); // 소문자 고려
 
       return (
         matchesAmount && matchesLength && matchesEarningRate && matchesTitle
       );
     });
 
-    // 정렬 적용
     return this.sortProducts(filtered);
   }
 
+  // 목록 정렬
   sortProducts(products: Product[]) {
     const sorted = [...products];
 
@@ -83,7 +86,7 @@ class ProductStore {
       return sorted.sort(option.sortFunc);
     }
 
-    return sorted; // 정렬 옵션이 없을 경우 필터링된 상품만 반환
+    return sorted;
   }
 
   search() {
@@ -91,13 +94,11 @@ class ProductStore {
   }
 
   // 상품 리스트 API 호출 및 상태 업데이트
-  // runInAction 내에서 this 바인딩을 강제로 지정
   async fetchProducts() {
     try {
-      const data = await fetchProductList(); // API 호출
+      const data = await fetchProductList();
       runInAction(() => {
-        // this를 강제로 바인딩
-        this.products = data; // 상품 데이터 업데이트
+        this.products = data;
       });
     } catch (error) {
       console.log(error);

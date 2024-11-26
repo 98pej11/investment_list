@@ -6,7 +6,7 @@ import * as S from "pages/InvestmentProducts/InvestmentProducts.styles";
 export default function InvestmentProducts() {
   return (
     <S.Container>
-      <h1>최근 투자 목록</h1>
+      <S.Title>최근 투자 목록</S.Title>
       <SearchFilter />
       <ProductList />
     </S.Container>

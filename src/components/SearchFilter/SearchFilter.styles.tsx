@@ -58,7 +58,7 @@ export const SelectButton = styled.div`
 export const Options = styled.div`
   position: absolute;
   width: 100%;
-  max-height: 200px;
+  max-height: 150px;
   overflow-y: auto;
   background-color: #fff;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
@@ -80,12 +80,11 @@ export const Option = styled.div`
   }
 `;
 
-export const ArrowIcon = styled(ArrowDownSVG)<{ isOpen: boolean }>`
-  width: 16px; /* 아이콘 크기 */
+export const ArrowIcon = styled(ArrowDownSVG)`
+  width: 16px;
   height: 16px;
-  fill: #333; /* 아이콘 색상 */
-  transition: transform 0.3s ease; /* 부드러운 회전 애니메이션 */
-  transform: rotate(${(props) => (props.isOpen ? "180deg" : "0deg")});
+  fill: #333;
+  transition: transform 0.3s ease;
 `;
 
 export const Button = styled.div`

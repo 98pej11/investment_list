@@ -6,7 +6,7 @@ export const Container = styled.div`
 
   display: grid;
   grid-template-columns: repeat(4, 1fr); /* 기본적으로 한 줄에 4개 */
-  gap: 20px; /* 간격 */
+  gap: 20px;
 
   @media (max-width: 1024px) {
     grid-template-columns: repeat(3, 1fr); /* 화면이 좁아지면 한 줄에 3개 */
@@ -27,21 +27,17 @@ export const Card = styled.div`
   grid-template-rows: repeat(3, fit-content(100%));
   row-gap: 10px;
 
-  background-color: ${({ theme }) => theme.background};
-  color: ${({ theme }) => theme.text};
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px 10px 15px 10px;
+  text-align: center;
 
-  border: 1px solid #ddd; /* 테두리 */
-  border-radius: 8px; /* 모서리 둥글게 */
-  padding: 10px 10px 15px 10px; /* 내부 여백 */
-  text-align: center; /* 텍스트 중앙 정렬 */
-
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
-
   cursor: pointer;
 
   &:hover {
-    transform: translateY(-5px); /* 호버 시 약간 위로 */
+    transform: translateY(-5px);
   }
 
   img {
@@ -58,6 +54,14 @@ export const Title = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 12px;
+  }
 `;
 
 export const Info = styled.div`
@@ -65,6 +69,14 @@ export const Info = styled.div`
   color: #979696;
   font-weight: bold;
   font-size: 15px;
+
+  @media (max-width: 768px) {
+    font-size: 12px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 10px;
+  }
 
   span {
     font-size: 18px;
@@ -75,17 +87,13 @@ export const Info = styled.div`
     &.highlight {
       color: #e74c3c; /* 수익률 강조 색상 */
     }
+
+    @media (max-width: 768px) {
+      font-size: 15px;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 13px;
+    }
   }
-`;
-
-export const Loading = styled.div`
-  text-align: center;
-  font-size: 18px;
-  color: ${({ theme }) => theme.text};
-`;
-
-export const Error = styled.div`
-  text-align: center;
-  font-size: 18px;
-  color: red;
 `;
