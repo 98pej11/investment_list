@@ -1,8 +1,10 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { Provider } from "mobx-react";
-import { productStore } from "stores/productStore";
-import SearchFilter from "components/SearchFilter/SearchFilter";
 import "@testing-library/jest-dom";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+
+import SearchFilter from "components/SearchFilter/SearchFilter";
+
+import { productStore } from "stores/productStore";
 
 jest.mock("stores/productStore", () => ({
   productStore: {

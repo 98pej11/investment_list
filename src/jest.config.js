@@ -1,12 +1,11 @@
 module.exports = {
-  preset: "ts-jest",
-  testEnvironment: "jsdom",
   transform: {
-    "^.+\\.(ts|tsx)$": "ts-jest", // TypeScript 변환
-    "^.+\\.(js|jsx)$": "babel-jest", // JavaScript 변환
+    "^.+\\.[jt]sx?$": ["babel-jest"],
   },
-  transformIgnorePatterns: ["/node_modules/"],
+  moduleDirectories: ["node_modules", "src"],
   moduleNameMapper: {
-    "\\.(css|less|scss|sass)$": "identity-obj-proxy",
+    "@/(.*)$": "<rootDir>/src/$1",
   },
+  testEnvironment: "jsdom",
+  testTimeout: 10000,
 };

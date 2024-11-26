@@ -1,8 +1,10 @@
-import { render, screen, fireEvent } from "@testing-library/react";
 import { Provider } from "mobx-react";
-import { productStore } from "stores/productStore";
-import ProductList from "components/ProductList/ProductList";
 import "@testing-library/jest-dom";
+import { render, screen, fireEvent } from "@testing-library/react";
+
+import ProductList from "components/ProductList/ProductList";
+
+import { productStore } from "stores/productStore";
 
 jest.mock("stores/productStore", () => ({
   productStore: {
@@ -168,8 +170,8 @@ describe("ProductList 컴포넌트", () => {
     // 스크롤 이벤트 트리거
     fireEvent.scroll(window, { target: { scrollY: 1000 } });
 
-    // 스크롤 후 12개씩 상품이 추가로 로드되었는지 확인
-    expect(screen.getAllByTestId("product-card")).toHaveLength(15); // 현재 데이터가 3개라 더 로드되지 않음.
+    // 스크롤 후 추가로 로드되었는지 확인
+    expect(screen.getAllByTestId("product-card")).toHaveLength(15); // 현재 데이터가 15개라 더 로드되지 않음.
   });
 
   it("fetchProducts가 컴포넌트 마운트 시 호출되는지 확인", () => {
